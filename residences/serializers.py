@@ -25,7 +25,7 @@ class ImageSerializer(serializers.ModelSerializer):
 
 
 class ImageAlbumSerializer(serializers.ModelSerializer):
-    images = ImageSerializer(many=True, allow_null=True)
+    images = ImageSerializer(many=True, read_only=True)
 
     class Meta:
         model = ImageAlbum
@@ -37,13 +37,11 @@ class CitySerializer(serializers.ModelSerializer):
     class Meta:
         model = City
         fields = ('id', 'title', 'is_valid', 'country', 'created_time', 'modified_time')
-        extra_kwargs = {
-            'country': {'allow_null': True}
-        }
+        extra_kwargs = {'country': {'required': False, 'allow_null': True}}
 
 
 class CountrySerializer(serializers.ModelSerializer):
-    cities = CitySerializer(many=True, allow_null=True)
+    cities = CitySerializer(many=True, read_only=True)
 
     class Meta:
         model = Country
@@ -52,9 +50,9 @@ class CountrySerializer(serializers.ModelSerializer):
 
 # Unit serializer
 class UnitSerializer(serializers.ModelSerializer):
-    image_album = ImageAlbumSerializer(many=False)
-    facilities = FacilitySerializer(many=True)
-    policies = PolicySerializer(many=True)
+    image_album = ImageAlbumSerializer(many=False, required=False, allow_null=True)
+    facilities = FacilitySerializer(many=True, required=False, allow_null=True)
+    policies = PolicySerializer(many=True, required=False, allow_null=True)
 
     class Meta:
         model = Unit

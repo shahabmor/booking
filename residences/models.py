@@ -100,7 +100,7 @@ class City(models.Model):
     created_time = models.DateTimeField(auto_now_add=True)
     modified_time = models.DateTimeField(auto_now=True)
 
-    country = models.ForeignKey(Country, related_name='cities', on_delete=models.CASCADE)
+    country = models.ForeignKey(Country, related_name='cities', on_delete=models.CASCADE, null=True)
 
     def get_title(self):
         return self.title.capitalize()

@@ -1,4 +1,4 @@
-from rest_framework import viewsets, mixins, parsers, renderers
+from rest_framework import viewsets, parsers, renderers
 from .serializers import *
 from .models import *
 
@@ -85,4 +85,3 @@ class ResidenceViewSet(viewsets.ModelViewSet):
 
     parser_classes = [parsers.JSONParser, parsers.MultiPartParser]
     renderer_classes = [renderers.JSONRenderer, renderers.MultiPartRenderer]
-
