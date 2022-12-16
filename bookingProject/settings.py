@@ -41,8 +41,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
+    'django_restful_admin',
 
     'users.apps.UsersConfig',
+    'residences.apps.ResidencesConfig',
 ]
 
 MIDDLEWARE = [
@@ -137,4 +139,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # AUTH_USER_MODEL
 AUTH_USER_MODEL = 'users.User'
+
+
+# Rest Framework
+REST_FRAMEWORK = {}
+
+
 
