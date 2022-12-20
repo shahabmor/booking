@@ -85,7 +85,7 @@ WSGI_APPLICATION = 'bookingProject.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'booking',
+        'NAME': 'test_5',
         'USER': 'root',
         'PASSWORD': 'hm(X*683(YovVXOF5%',
         'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
@@ -142,7 +142,16 @@ AUTH_USER_MODEL = 'users.User'
 
 
 # Rest Framework
-REST_FRAMEWORK = {}
+REST_FRAMEWORK = {
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.JSONParser',
+        'rest_framework.parsers.MultiPartParser'
+    ],
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.MultiPartRenderer',
+    ]
+}
 
 
 
