@@ -15,10 +15,7 @@ class UserViewSet(
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
-    parser_classes = [parsers.JSONParser, parsers.MultiPartParser]
-    renderer_classes = [renderers.JSONRenderer, renderers.MultiPartRenderer]
 
-    def post(self, request, *args, **kwargs):
-        return super().create()
+
 
 
