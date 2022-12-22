@@ -10,7 +10,7 @@ from .models import *
 class CountryViewSet(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
 
-    queryset = Country.objects.filter(is_valid=True)
+    queryset = Country.objects.all()
     serializer_class = CountrySerializer
 
     def get_permissions(self):
@@ -22,7 +22,7 @@ class CountryViewSet(viewsets.ModelViewSet):
 class CityViewSet(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
 
-    queryset = City.objects.filter(is_valid=True)
+    queryset = City.objects.all()
     serializer_class = CitySerializer
 
     def get_permissions(self):
@@ -35,7 +35,7 @@ class CityViewSet(viewsets.ModelViewSet):
 class UnitViewSet(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
 
-    queryset = Unit.objects.filter(is_valid=True)
+    queryset = Unit.objects.all()
     serializer_class = UnitSerializer
 
     def get_permissions(self):
@@ -47,7 +47,7 @@ class UnitViewSet(viewsets.ModelViewSet):
 class HotelViewSet(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
 
-    queryset = Hotel.objects.filter(is_valid=True)
+    queryset = Hotel.objects.all()
     serializer_class = HotelSerializer
 
     def get_permissions(self):
@@ -59,7 +59,7 @@ class HotelViewSet(viewsets.ModelViewSet):
 class ResidenceViewSet(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
 
-    queryset = Residence.objects.filter(is_valid=True)
+    queryset = Residence.objects.all()
     serializer_class = ResidenceSerializer
 
     def get_permissions(self):
@@ -72,7 +72,7 @@ class ResidenceViewSet(viewsets.ModelViewSet):
 class ImageAlbumViewSet(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
 
-    queryset = ImageAlbum.objects.filter(is_valid=True)
+    queryset = ImageAlbum.objects.all()
     serializer_class = ImageAlbumSerializer
 
     def get_permissions(self):
@@ -84,7 +84,7 @@ class ImageAlbumViewSet(viewsets.ModelViewSet):
 class ImageViewSet(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
 
-    queryset = Image.objects.filter(is_valid=True)
+    queryset = Image.objects.all()
     serializer_class = ImageSerializer
 
     def get_permissions(self):
@@ -97,7 +97,7 @@ class ImageViewSet(viewsets.ModelViewSet):
 class FacilityViewSet(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
 
-    queryset = Facility.objects.filter(is_valid=True)
+    queryset = Facility.objects.all()
     serializer_class = FacilitySerializer
 
     def get_permissions(self):
@@ -110,7 +110,7 @@ class FacilityViewSet(viewsets.ModelViewSet):
 class PolicyViewSet(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
 
-    queryset = Policy.objects.filter(is_valid=True)
+    queryset = Policy.objects.all()
     serializer_class = PolicySerializer
 
     def get_permissions(self):
@@ -123,7 +123,7 @@ class PolicyViewSet(viewsets.ModelViewSet):
 class PriceInfoViewSet(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
 
-    queryset = PriceInfo.objects.filter(is_valid=True)
+    queryset = PriceInfo.objects.all()
     serializer_class = PriceInfoSerializer
 
     def get_permissions(self):
@@ -136,10 +136,26 @@ class PriceInfoViewSet(viewsets.ModelViewSet):
 class RentResidenceViewSet(viewsets.ModelViewSet):
 
     authentication_classes = [JWTAuthentication]
-    permission_classes = [RentPermission]
 
-    queryset = RentResidence.objects.filter(is_valid=True)
+    queryset = RentResidence.objects.all()
     serializer_class = RentResidenceSerializer
+
+    def get_permissions(self):
+        if self.action == 'list':
+            return [IsAdminUser()]
+        return [RentPermission()]
+
+class RentHotelViewSet(viewsets.ModelViewSet):
+
+    authentication_classes = [JWTAuthentication]
+
+    queryset = RentHotel.objects.all()
+    serializer_class = RentHotelSerializer
+
+    def get_permissions(self):
+        if self.action == 'list':
+            return [IsAdminUser()]
+        return [RentPermission()]
 
 
 

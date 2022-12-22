@@ -87,7 +87,7 @@ WSGI_APPLICATION = 'bookingProject.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'test_5',
+        'NAME': 'test3',
         'USER': 'root',
         'PASSWORD': 'hm(X*683(YovVXOF5%',
         'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
@@ -161,8 +161,8 @@ REST_FRAMEWORK = {
 
 # Simple JWT settings
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=30),
 
     'AUTH_HEADER_TYPES': ('Bearer', 'JWT'),
 

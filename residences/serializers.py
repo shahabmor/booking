@@ -16,6 +16,21 @@ class RentResidenceSerializer(serializers.ModelSerializer):
         return super(RentResidenceSerializer, self).create(validated_data)
 
 
+class RentHotelSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = RentHotel
+        fields = ('id', 'date', 'unit', 'user')
+        extra_kwargs = {
+            'unit': {'allow_null': True},
+        }
+
+    def create(self, validated_data):
+        user = self.context['request'].user
+        validated_data['user'] = user
+        return super(RentHotelSerializer, self).create(validated_data)
+
+
 # Facility serializer-------------------------------------------------------------------------------------------------
 class FacilitySerializer(serializers.ModelSerializer):
     class Meta:
@@ -82,7 +97,7 @@ class UnitSerializer(serializers.ModelSerializer):
         model = Unit
         fields = ('id', 'title', 'description', 'capacity', 'bedroom', 'bed', 'hotel',
                   'facilities', 'price_info', 'is_valid', 'created_time', 'modified_time')
-        extra_kwargs = {'hotel': {'required': False, 'allow_null': True}}
+        extra_kwargs = {'hotel': {'required': True, 'allow_null': True}}
 
 
 class ResidenceSerializer(serializers.ModelSerializer):

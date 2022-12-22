@@ -86,7 +86,7 @@ class Unit(models.Model):
 # Price related model---------------------------------------------------------------------------------------------------
 class PriceInfo(models.Model):
     currency = models.CharField(max_length=3, default='IRR')
-    price = models.PositiveSmallIntegerField(null=True, blank=True)
+    price = models.PositiveIntegerField(null=True, blank=True)
 
     residence = models.OneToOneField(Residence, on_delete=models.CASCADE, related_name='price_info', null=True, blank=True)
     unit = models.OneToOneField(Unit, on_delete=models.CASCADE, related_name='price_info', null=True, blank=True)
@@ -171,7 +171,7 @@ class Policy(models.Model):
 
 # Rent_related models---------------------------------------------------------------------------------------------------
 class RentResidence(models.Model):
-    date = models.DateField(blank=True, default=now.today().date())
+    date = models.DateField(blank=True, default=now.date())
     residence = models.ForeignKey(Residence, blank=True, null=True, on_delete=models.CASCADE, related_name='rented_days')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.CASCADE,
                              related_name='rent_residence')
@@ -187,3 +187,14 @@ class RentResidence(models.Model):
         return f'{self.residence}-{self.date}'
 
 
+class RentHotel(models.Model):
+    date = models.DateField(blank=True, default=now.date())
+    unit = models.ForeignKey(Unit, blank=True, null=True, on_delete=models.CASCADE, related_name='rented_days')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.CASCADE,
+                             related_name='rent_hotel')
+
+    class Meta:
+        unique_together = ('date', 'unit')
+
+    def __str__(self):
+        return f'{self.unit}-{self.date}'
