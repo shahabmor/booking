@@ -116,3 +116,16 @@ class PolicyViewSet(viewsets.ModelViewSet):
         if self.action == 'list':
             return [AllowAny()]
         return [IsAdminUser()]
+
+
+# Price API ViewSet-----------------------------------------------------------------------------------------------------
+class PriceInfoViewSet(viewsets.ModelViewSet):
+    authentication_classes = [JWTAuthentication]
+
+    queryset = PriceInfo.objects.filter(is_valid=True)
+    serializer_class = PriceInfoSerializer
+
+    def get_permissions(self):
+        if self.action == 'list':
+            return [AllowAny()]
+        return [IsAdminUser()]

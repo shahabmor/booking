@@ -1,6 +1,5 @@
 from django.db import models
 
-
 # Location-related models-----------------------------------------------------------------------------------------------
 class Country(models.Model):
     title = models.CharField(max_length=100)
@@ -30,7 +29,6 @@ class City(models.Model):
     def __str__(self):
         return self.title
 
-# Price related model---------------------------------------------------------------------------------------------------
 
 
 # Residences models-----------------------------------------------------------------------------------------------------
@@ -79,6 +77,21 @@ class Unit(models.Model):
 
     def __str__(self):
         return self.title
+
+# Price related model---------------------------------------------------------------------------------------------------
+class PriceInfo(models.Model):
+    currency = models.CharField(max_length=3, default='IRR')
+    price = models.PositiveSmallIntegerField(null=True, blank=True)
+
+    residence = models.OneToOneField(Residence, on_delete=models.CASCADE, related_name='price_info', null=True, blank=True)
+    unit = models.OneToOneField(Unit, on_delete=models.CASCADE, related_name='price_info', null=True, blank=True)
+
+    is_valid = models.BooleanField(default=True)
+    created_time = models.DateTimeField(auto_now_add=True)
+    modified_time = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f'{self.price}_{self.currency}'
 
 
 # Image-related models--------------------------------------------------------------------------------------------------

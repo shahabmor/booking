@@ -27,6 +27,16 @@ class PolicySerializer(serializers.ModelSerializer):
         }
 
 
+# Price-related serializers---------------------------------------------------------------------------------------------
+class PriceInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PriceInfo
+        fields = ('currency', 'price', 'unit', 'residence')
+        extra_kwargs = {
+            'unit': {'required': False, 'allow_null': True},
+            'residence': {'required': False, 'allow_null': True}
+        }
+
 # Image-related serializers---------------------------------------------------------------------------------------------
 class ImageSerializer(serializers.ModelSerializer):
 
@@ -51,11 +61,12 @@ class ImageAlbumSerializer(serializers.ModelSerializer):
 # Residences serializers------------------------------------------------------------------------------------------------
 class UnitSerializer(serializers.ModelSerializer):
     facilities = FacilitySerializer(many=True, read_only=True)
+    price_info = PriceInfoSerializer(many=False, read_only=True)
 
     class Meta:
         model = Unit
         fields = ('id', 'title', 'description', 'capacity', 'bedroom', 'bed', 'hotel',
-                  'facilities', 'is_valid', 'created_time', 'modified_time')
+                  'facilities', 'price_info', 'is_valid', 'created_time', 'modified_time')
         extra_kwargs = {'hotel': {'required': False, 'allow_null': True}}
 
 
@@ -63,11 +74,12 @@ class ResidenceSerializer(serializers.ModelSerializer):
     image_album = ImageAlbumSerializer(many=False, read_only=True)
     facilities = FacilitySerializer(many=True, read_only=True)
     policies = PolicySerializer(many=True, read_only=True)
+    price_info = PriceInfoSerializer(many=False, read_only=True)
 
     class Meta:
         model = Residence
         fields = ('id', 'title', 'description', 'capacity', 'bedroom', 'bed', 'city',
-                  'image_album', 'facilities', 'policies', 'is_valid', 'created_time', 'modified_time')
+                  'image_album', 'facilities', 'policies', 'price_info', 'is_valid', 'created_time', 'modified_time')
         extra_kwargs = {'city': {'required': False, 'allow_null': True}}
 
 
