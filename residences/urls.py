@@ -12,6 +12,7 @@ router.register(r'image_album', ImageAlbumViewSet, basename='image_album')
 router.register(r'facilities', FacilityViewSet, basename='facilities')
 router.register(r'policies', PolicyViewSet, basename='policies')
 router.register(r'prices', PriceInfoViewSet, basename='prices')
+router.register(r'rent/residence', RentResidenceViewSet, basename='rent/residence')
 
 
 urlpatterns = []

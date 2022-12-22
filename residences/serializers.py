@@ -1,6 +1,21 @@
 from rest_framework import serializers
 from residences.models import *
 
+
+# Rent-related serializer-----------------------------------------------------------------------------------------------
+class RentResidenceSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = RentResidence
+        fields = ('id', 'date', 'residence', 'user')
+        extra_kwargs = {'residence': {'allow_null': True}}
+
+    def create(self, validated_data):
+        user = self.context['request'].user
+        validated_data['user'] = user
+        return super(RentResidenceSerializer, self).create(validated_data)
+
+
 # Facility serializer-------------------------------------------------------------------------------------------------
 class FacilitySerializer(serializers.ModelSerializer):
     class Meta:
@@ -75,11 +90,13 @@ class ResidenceSerializer(serializers.ModelSerializer):
     facilities = FacilitySerializer(many=True, read_only=True)
     policies = PolicySerializer(many=True, read_only=True)
     price_info = PriceInfoSerializer(many=False, read_only=True)
+    rented_days = RentResidenceSerializer(many=True, read_only=True)
 
     class Meta:
         model = Residence
         fields = ('id', 'title', 'description', 'capacity', 'bedroom', 'bed', 'city',
-                  'image_album', 'facilities', 'policies', 'price_info', 'is_valid', 'created_time', 'modified_time')
+                  'image_album', 'facilities', 'policies', 'price_info', 'rented_days',
+                  'is_valid', 'created_time', 'modified_time')
         extra_kwargs = {'city': {'required': False, 'allow_null': True}}
 
 
@@ -113,3 +130,34 @@ class CountrySerializer(serializers.ModelSerializer):
     class Meta:
         model = Country
         fields = ('id', 'title', 'is_valid', 'cities', 'created_time', 'modified_time')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

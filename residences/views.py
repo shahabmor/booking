@@ -1,6 +1,7 @@
-from rest_framework.permissions import IsAdminUser, AllowAny
+from rest_framework.permissions import IsAdminUser, AllowAny, IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from rest_framework import viewsets
+from rest_framework import viewsets, mixins
+from .permissions import *
 from .serializers import *
 from .models import *
 
@@ -129,3 +130,16 @@ class PriceInfoViewSet(viewsets.ModelViewSet):
         if self.action == 'list':
             return [AllowAny()]
         return [IsAdminUser()]
+
+
+# Rent-related ViewSet--------------------------------------------------------------------------------------------------
+class RentResidenceViewSet(viewsets.ModelViewSet):
+
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [RentPermission]
+
+    queryset = RentResidence.objects.filter(is_valid=True)
+    serializer_class = RentResidenceSerializer
+
+
+

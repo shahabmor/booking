@@ -1,4 +1,9 @@
 from django.db import models
+from django.conf import settings
+from django.utils import timezone
+
+now = timezone.localtime(timezone.now(), timezone.zoneinfo.ZoneInfo(key='Asia/Tehran'))
+
 
 # Location-related models-----------------------------------------------------------------------------------------------
 class Country(models.Model):
@@ -28,7 +33,6 @@ class City(models.Model):
 
     def __str__(self):
         return self.title
-
 
 
 # Residences models-----------------------------------------------------------------------------------------------------
@@ -77,6 +81,7 @@ class Unit(models.Model):
 
     def __str__(self):
         return self.title
+
 
 # Price related model---------------------------------------------------------------------------------------------------
 class PriceInfo(models.Model):
@@ -162,5 +167,23 @@ class Policy(models.Model):
 
     def __str__(self):
         return self.title
+
+
+# Rent_related models---------------------------------------------------------------------------------------------------
+class RentResidence(models.Model):
+    date = models.DateField(blank=True, default=now.today().date())
+    residence = models.ForeignKey(Residence, blank=True, null=True, on_delete=models.CASCADE, related_name='rented_days')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.CASCADE,
+                             related_name='rent_residence')
+
+    is_valid = models.BooleanField(default=True)
+    created_time = models.DateTimeField(auto_now_add=True)
+    modified_time = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ('date', 'residence')
+
+    def __str__(self):
+        return f'{self.residence}-{self.date}'
 
 
