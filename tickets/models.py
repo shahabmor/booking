@@ -1,4 +1,6 @@
 from django.db import models
+from django.conf import settings
+from .managers import ValidTickets
 
 from rest_framework import validators
 from django.utils import timezone
@@ -52,8 +54,7 @@ class AbstractTicket(models.Model):
     company = models.CharField(max_length=100, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
 
-    time = models.TimeField(null=True, blank=True)
-    date = models.DateField(null=True, blank=True)
+    time = models.DateTimeField(null=True, blank=True)
 
     duration = models.TimeField(null=True, blank=True)
 
@@ -66,6 +67,9 @@ class AbstractTicket(models.Model):
     is_valid = models.BooleanField(default=True)
     created_time = models.DateTimeField(auto_now_add=True)
     modified_time = models.DateTimeField(auto_now=True)
+
+    objects = models.Manager()
+    valid_tickets = ValidTickets()
 
     class Meta:
         abstract = True
@@ -129,6 +133,18 @@ class PriceInfo(models.Model):
 
     def __str__(self):
         return f'{self.price}_{self.currency}'
+
+
+# Buy-related models----------------------------------------------------------------------------------------------------
+class BuyAirPlaneTicket(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.CASCADE,
+                             related_name='airplane_tickets')
+    ticket = models.ForeignKey(AirplaneTicket, blank=True, null=True, on_delete=models.CASCADE,
+                               related_name='sold_tickets')
+    count = models.PositiveSmallIntegerField(default=1)
+
+
+
 
 
 

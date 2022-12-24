@@ -43,7 +43,7 @@ class AirplaneTicketSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AirplaneTicket
-        fields = ('id', 'company', 'description', 'origin', 'destination', 'time', 'date', 'duration',
+        fields = ('id', 'company', 'description', 'origin', 'destination', 'time', 'duration',
                   'airplane', 'flight_number', 'terminal', 'capacity', 'facilities', 'policies', 'price_info',
                   'is_valid', 'created_time', 'modified_time')
 
@@ -75,5 +75,30 @@ class CountrySerializer(serializers.ModelSerializer):
     class Meta:
         model = Country
         fields = ('id', 'title', 'is_valid', 'cities', 'created_time', 'modified_time')
+
+
+# Buy-related Serializers-----------------------------------------------------------------------------------------------
+class SeeAirplaneTicketSerializer(serializers.ModelSerializer):
+
+    facilities = FacilitySerializer(many=True, read_only=True)
+    policies = PolicySerializer(many=True, read_only=True)
+    price_info = PriceInfoSerializer(many=False, read_only=True)
+
+    class Meta:
+        model = AirplaneTicket
+        fields = ('id', 'company', 'description', 'origin', 'destination', 'time', 'duration',
+                  'airplane', 'flight_number', 'terminal', 'capacity', 'facilities', 'policies', 'price_info')
+
+
+class BuyAirPlaneTicketSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BuyAirPlaneTicket
+        fields = ('id', 'user', 'ticket', 'count')
+        extra_kwargs = {'ticket': {'allow_null': True}}
+
+    def create(self, validated_data):
+        user = self.context['request'].user
+        validated_data['user'] = user
+        return super(BuyAirPlaneTicketSerializer, self).create(validated_data)
 
 
