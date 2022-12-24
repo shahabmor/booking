@@ -88,7 +88,8 @@ class PriceInfo(models.Model):
     currency = models.CharField(max_length=3, default='IRR')
     price = models.PositiveIntegerField(null=True, blank=True)
 
-    residence = models.OneToOneField(Residence, on_delete=models.CASCADE, related_name='price_info', null=True, blank=True)
+    residence = models.OneToOneField(Residence, on_delete=models.CASCADE, related_name='price_info',
+                                     null=True, blank=True)
     unit = models.OneToOneField(Unit, on_delete=models.CASCADE, related_name='price_info', null=True, blank=True)
 
     is_valid = models.BooleanField(default=True)
@@ -104,7 +105,8 @@ class ImageAlbum(models.Model):
     title = models.CharField(max_length=50, null=True, blank=True, default=None)
     description = models.TextField(null=True, blank=True, default=None)
 
-    residence = models.OneToOneField(Residence, on_delete=models.CASCADE, related_name='image_album', null=True, blank=True)
+    residence = models.OneToOneField(Residence, on_delete=models.CASCADE, related_name='image_album',
+                                     null=True, blank=True)
     hotel = models.OneToOneField(Hotel, on_delete=models.CASCADE, related_name='image_album', null=True, blank=True)
 
     is_valid = models.BooleanField(default=True)
@@ -172,7 +174,8 @@ class Policy(models.Model):
 # Rent_related models---------------------------------------------------------------------------------------------------
 class RentResidence(models.Model):
     date = models.DateField(blank=True, default=now.date())
-    residence = models.ForeignKey(Residence, blank=True, null=True, on_delete=models.CASCADE, related_name='rented_days')
+    residence = models.ForeignKey(Residence, blank=True, null=True, on_delete=models.CASCADE,
+                                  related_name='rented_days')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.CASCADE,
                              related_name='rent_residence')
 

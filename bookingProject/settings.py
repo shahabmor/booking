@@ -47,6 +47,7 @@ INSTALLED_APPS = [
 
     'users.apps.UsersConfig',
     'residences.apps.ResidencesConfig',
+    'tickets.apps.TicketsConfig',
 ]
 
 MIDDLEWARE = [
