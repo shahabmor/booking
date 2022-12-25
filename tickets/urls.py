@@ -12,6 +12,7 @@ router.register(r'policies', PolicyViewSet, basename='policies')
 router.register(r'prices', PriceInfoViewSet, basename='prices')
 router.register(r'buy/airplane', BuyAirPlaneTicketViewSet, basename='buy/airplane')
 router.register(r'sold/airplane', SoldAirPlaneTicketViewSet, basename='sold/airplane')
+router.register(r'search', SearchViewSet, basename='search')
 
 urlpatterns = []
 urlpatterns += router.urls

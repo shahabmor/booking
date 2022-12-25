@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_restful_admin',
     'rest_framework_simplejwt',
+    'django_filters',
 
     'users.apps.UsersConfig',
     'residences.apps.ResidencesConfig',

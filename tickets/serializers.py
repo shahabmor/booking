@@ -102,3 +102,9 @@ class BuyAirPlaneTicketSerializer(serializers.ModelSerializer):
         return super(BuyAirPlaneTicketSerializer, self).create(validated_data)
 
 
+# Search Serializer-----------------------------------------------------------------------------------------------------
+class SearchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AirplaneTicket
+        fields = ('company', 'time', 'origin', 'destination')
+

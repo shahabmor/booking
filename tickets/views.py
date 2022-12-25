@@ -1,7 +1,10 @@
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAdminUser, AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework import viewsets, mixins
+from permission.permission import UserPermission
 from .serializers import *
 from .models import *
 
@@ -79,7 +82,7 @@ class BuyAirPlaneTicketViewSet(viewsets.ModelViewSet):
     def get_permissions(self):
         if self.action == 'list':
             return [AllowAny()]
-        return [IsAuthenticated()]
+        return [UserPermission()]
 
     def get_serializer_class(self):
         if self.action == 'list':
@@ -92,7 +95,7 @@ class BuyAirPlaneTicketViewSet(viewsets.ModelViewSet):
         ticket = AirplaneTicket.valid_tickets.get(id=data['ticket'])
         user = request.user
 
-        if ticket.capacity > int(count):
+        if ticket.capacity >= int(count):
             buy_airplane_ticket = BuyAirPlaneTicket.objects.create(user=user, ticket=ticket, count=count)
             buy_airplane_ticket.save()
 
@@ -104,6 +107,19 @@ class BuyAirPlaneTicketViewSet(viewsets.ModelViewSet):
 
         raise ValueError(f'Only {ticket.capacity} tickets left!')
 
+    # def destroy(self, request, *args, **kwargs):
+    #
+    #     buy_airplane_ticket = self.get_object()
+    #     buy_airplane_ticket.delete()
+    #     return Response({'Ticket has been cancelled'})
+    # #     data = request.data
+    # #     count = data['count']
+    # #     ticket = AirplaneTicket.valid_tickets.get(id=data['ticket'])
+    # #     ticket.capacity += int(count)
+    # #     ticket.save()
+    # #
+    # #     return super().destroy()
+
 
 class SoldAirPlaneTicketViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     authentication_classes = [JWTAuthentication]
@@ -111,3 +127,14 @@ class SoldAirPlaneTicketViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
 
     queryset = BuyAirPlaneTicket.objects.all()
     serializer_class = BuyAirPlaneTicketSerializer
+
+
+# Search-related ViewSet------------------------------------------------------------------------------------------------
+# class SearchViewSet(viewsets.GenericViewSet):
+#     authentication_classes = [JWTAuthentication]
+#     permission_classes = [AllowAny]
+#     queryset = AirplaneTicket.valid_tickets.all()
+#     serializer_class = SearchSerializer
+#     filter_backends = [DjangoFilterBackend, SearchFilter]
+#     search_fields = ('origin', 'destination')
+#

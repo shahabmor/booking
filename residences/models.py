@@ -87,6 +87,7 @@ class Unit(models.Model):
 class PriceInfo(models.Model):
     currency = models.CharField(max_length=3, default='IRR')
     price = models.PositiveIntegerField(null=True, blank=True)
+    discount = models.PositiveSmallIntegerField
 
     residence = models.OneToOneField(Residence, on_delete=models.CASCADE, related_name='price_info',
                                      null=True, blank=True)
