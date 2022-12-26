@@ -3,6 +3,7 @@ from abc import ABC
 from django.core.validators import RegexValidator
 from rest_framework import serializers
 from .models import User, Profile
+from django.core.cache import cache
 
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -22,7 +23,14 @@ class UserSerializer(serializers.ModelSerializer):
 
 # Login-related Serializer----------------------------------------------------------------------------------------------
 
-class PhoneSerializer(serializers.Serializer):
+class StepOneLoginSerializer(serializers.Serializer):
     phone = serializers.IntegerField(required=True,
                                      validators=[RegexValidator(r'^989[0-3,9]\d{8}$', 'Enter a valid phone number.',
                                                                 'invalid')])
+
+
+class StepTwoLoginSerializer(serializers.Serializer):
+    phone = serializers.IntegerField(required=True,
+                                     validators=[RegexValidator(r'^989[0-3,9]\d{8}$', 'Enter a valid phone number.',
+                                                                'invalid')])
+    code = serializers.CharField(max_length=6)
