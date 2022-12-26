@@ -10,8 +10,8 @@ import tickets.urls
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    path('', include(residences.urls)),
-    path('', include(users.urls)),
+    path('residences/', include(residences.urls)),
+    path('users/', include(users.urls)),
     path('tickets/', include(tickets.urls)),
 
     path('token/obtain/', TokenObtainPairView.as_view(), name='token_obtain_pair'),

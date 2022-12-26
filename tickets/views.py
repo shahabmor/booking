@@ -130,11 +130,11 @@ class SoldAirPlaneTicketViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
 
 
 # Search-related ViewSet------------------------------------------------------------------------------------------------
-# class SearchViewSet(viewsets.GenericViewSet):
-#     authentication_classes = [JWTAuthentication]
-#     permission_classes = [AllowAny]
-#     queryset = AirplaneTicket.valid_tickets.all()
-#     serializer_class = SearchSerializer
-#     filter_backends = [DjangoFilterBackend, SearchFilter]
-#     search_fields = ('origin', 'destination')
-#
+class SearchViewSet(viewsets.GenericViewSet):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [AllowAny]
+    queryset = AirplaneTicket.valid_tickets.all()
+    serializer_class = SearchSerializer
+    filter_backends = [DjangoFilterBackend, SearchFilter]
+    search_fields = ('origin', 'destination')
+

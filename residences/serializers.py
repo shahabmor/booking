@@ -64,8 +64,11 @@ class PriceInfoSerializer(serializers.ModelSerializer):
         fields = ('currency', 'price', 'unit', 'residence')
         extra_kwargs = {
             'unit': {'required': False, 'allow_null': True},
-            'residence': {'required': False, 'allow_null': True}
+            'residence': {'required': False, 'allow_null': True},
         }
+
+    def price_calculator(self, obj):
+        pass
 
 # Image-related serializers---------------------------------------------------------------------------------------------
 class ImageSerializer(serializers.ModelSerializer):
@@ -145,34 +148,4 @@ class CountrySerializer(serializers.ModelSerializer):
     class Meta:
         model = Country
         fields = ('id', 'title', 'is_valid', 'cities', 'created_time', 'modified_time')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

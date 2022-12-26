@@ -158,4 +158,3 @@ class RentHotelViewSet(viewsets.ModelViewSet):
 
 
 
-

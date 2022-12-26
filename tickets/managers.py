@@ -1,7 +1,9 @@
 from django.db import models
 from django.utils import timezone
 
-now = timezone.localtime(timezone.now(), timezone.zoneinfo.ZoneInfo(key='Asia/Tehran'))
+# now = timezone.localtime(timezone.now(), timezone.zoneinfo.ZoneInfo(key='Asia/Tehran'))
+# now = timezone.now()
+now = timezone.localtime()
 
 
 class ValidTickets(models.Manager):

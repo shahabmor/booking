@@ -87,7 +87,7 @@ class Unit(models.Model):
 class PriceInfo(models.Model):
     currency = models.CharField(max_length=3, default='IRR')
     price = models.PositiveIntegerField(null=True, blank=True)
-    discount = models.PositiveSmallIntegerField
+    weekday = models.PositiveSmallIntegerField(default=now.weekday())
 
     residence = models.OneToOneField(Residence, on_delete=models.CASCADE, related_name='price_info',
                                      null=True, blank=True)
@@ -96,6 +96,13 @@ class PriceInfo(models.Model):
     is_valid = models.BooleanField(default=True)
     created_time = models.DateTimeField(auto_now_add=True)
     modified_time = models.DateTimeField(auto_now=True)
+
+    def get_price(self):
+        weekend_ratio = 1.2
+        weekend = [0, 1]
+        if self.weekday in weekend:
+            self.price *= weekend_ratio
+        return self.price
 
     def __str__(self):
         return f'{self.price}_{self.currency}'
