@@ -3,11 +3,10 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework_simplejwt.tokens import RefreshToken
-from django.core.cache import cache
+from django.core.exceptions import ObjectDoesNotExist
 
-from django.conf import settings
+
 from permission.permission import UpdateUserPermission
 from .serializers import *
 from .models import User
@@ -66,7 +65,7 @@ class LoginStepTwoAPIView(GenericAPIView):
     serializer_class = StepTwoLoginSerializer
 
     def post(self, request):
-        serializer = self.get_serializer(data=request.data)
+        # serializer = self.get_serializer(data=request.data)
         phone_number = request.data['phone']
         user_answer = request.data['code']
         code = cache.get(str(phone_number))
@@ -85,7 +84,7 @@ class LoginStepTwoAPIView(GenericAPIView):
                 tokens = get_tokens_for_user(user)
                 return Response(tokens)
 
-            except:
+            except ObjectDoesNotExist:
                 return Response('There is no User with this phone number')
 
         else:
