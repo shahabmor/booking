@@ -16,7 +16,7 @@ urlpatterns = [
     path('tickets/', include(tickets.urls)),
     path('search/', include(search.urls)),
 
-    path('token/obtain/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    # path('token/obtain/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    # path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
 ]

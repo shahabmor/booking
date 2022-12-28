@@ -41,6 +41,8 @@ class AbstractResidence(models.Model):
     description = models.TextField(null=True, blank=True)
     capacity = models.PositiveSmallIntegerField(default=None, null=True)
 
+    city = models.ForeignKey(City, related_name='%(class)ss', on_delete=models.CASCADE, null=True, blank=True)
+
     is_valid = models.BooleanField(default=True)
     created_time = models.DateTimeField(auto_now_add=True)
     modified_time = models.DateTimeField(auto_now=True)
@@ -50,7 +52,6 @@ class AbstractResidence(models.Model):
 
 
 class Residence(AbstractResidence):
-    city = models.ForeignKey(City, related_name='residences', on_delete=models.CASCADE, null=True, blank=True)
     bedroom = models.PositiveSmallIntegerField(default=0)
     bed = models.PositiveSmallIntegerField(default=1)
 
@@ -59,8 +60,6 @@ class Residence(AbstractResidence):
 
 
 class Hotel(AbstractResidence):
-    city = models.ForeignKey(City, related_name='hotels', on_delete=models.CASCADE, null=True, blank=True)
-
     def __str__(self):
         return self.title
 
@@ -84,18 +83,17 @@ class Unit(models.Model):
 
 
 # Price related model---------------------------------------------------------------------------------------------------
-class PriceInfo(models.Model):
+class AbstractPriceInfo(models.Model):
     currency = models.CharField(max_length=3, default='IRR')
     price = models.PositiveIntegerField(null=True, blank=True)
     weekday = models.PositiveSmallIntegerField(default=now.weekday())
 
-    residence = models.OneToOneField(Residence, on_delete=models.CASCADE, related_name='price_info',
-                                     null=True, blank=True)
-    unit = models.OneToOneField(Unit, on_delete=models.CASCADE, related_name='price_info', null=True, blank=True)
-
     is_valid = models.BooleanField(default=True)
     created_time = models.DateTimeField(auto_now_add=True)
     modified_time = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
 
     def get_price(self):
         weekend_ratio = 1.2
@@ -108,75 +106,99 @@ class PriceInfo(models.Model):
         return f'{self.price}_{self.currency}'
 
 
+class ResidencePriceInfo(AbstractPriceInfo):
+    residence = models.OneToOneField(Residence, on_delete=models.CASCADE, related_name='price_info',
+                                     null=True, blank=True)
+
+class UnitPriceInfo(AbstractPriceInfo):
+    unit = models.OneToOneField(Unit, on_delete=models.CASCADE, related_name='price_info', null=True, blank=True)
+
+
 # Image-related models--------------------------------------------------------------------------------------------------
-class ImageAlbum(models.Model):
+class AbstractImage(models.Model):
     title = models.CharField(max_length=50, null=True, blank=True, default=None)
     description = models.TextField(null=True, blank=True, default=None)
 
+    avatar = models.ImageField(upload_to='%(class)ss', null=True, blank=True)
+
+    is_valid = models.BooleanField(default=True)
+    created_time = models.DateTimeField(auto_now_add=True)
+    modified_time = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.title
+
+
+class ResidenceImage(AbstractImage):
     residence = models.OneToOneField(Residence, on_delete=models.CASCADE, related_name='image_album',
                                      null=True, blank=True)
+
+class HotelImage(AbstractImage):
     hotel = models.OneToOneField(Hotel, on_delete=models.CASCADE, related_name='image_album', null=True, blank=True)
-
-    is_valid = models.BooleanField(default=True)
-    created_time = models.DateTimeField(auto_now_add=True)
-    modified_time = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return self.title
-
-
-class Image(models.Model):
-    title = models.CharField(max_length=50, null=True, blank=True, default=None)
-    description = models.TextField(null=True, blank=True, default=None)
-    avatar = models.ImageField(upload_to='residences/', null=True, blank=True)
-
-    album = models.ForeignKey(ImageAlbum, related_name='images', on_delete=models.CASCADE, null=True, blank=True)
-
-    is_valid = models.BooleanField(default=True)
-    created_time = models.DateTimeField(auto_now_add=True)
-    modified_time = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return self.title
 
 
 # Facility model--------------------------------------------------------------------------------------------------------
-class Facility(models.Model):
+class AbstractFacility(models.Model):
     title = models.CharField(max_length=50)
     description = models.TextField(null=True, blank=True, default=None)
 
-    hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE, related_name='facilities', null=True, blank=True)
-    residence = models.ForeignKey(Residence, on_delete=models.CASCADE, related_name='facilities', null=True, blank=True)
-    unit = models.ForeignKey(Unit, on_delete=models.CASCADE, related_name='facilities', null=True, blank=True)
-
     is_valid = models.BooleanField(default=True)
     created_time = models.DateTimeField(auto_now_add=True)
     modified_time = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name_plural = "facilities"
+        abstract = True
 
     def __str__(self):
         return self.title
+
+class ResidenceFacility(AbstractFacility):
+    residence = models.ForeignKey(Residence, on_delete=models.CASCADE, related_name='facilities', null=True, blank=True)
+
+    class Meta:
+        verbose_name_plural = "residence_facilities"
+
+
+class HotelFacility(AbstractFacility):
+    hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE, related_name='facilities', null=True, blank=True)
+
+    class Meta:
+        verbose_name_plural = "hotel_facilities"
+
+class UnitFacility(AbstractFacility):
+    unit = models.ForeignKey(Unit, on_delete=models.CASCADE, related_name='facilities', null=True, blank=True)
+
+    class Meta:
+        verbose_name_plural = "unit_facilities"
 
 
 # Policy model----------------------------------------------------------------------------------------------------------
-class Policy(models.Model):
+class AbstractPolicy(models.Model):
     title = models.CharField(max_length=50, null=True, blank=True)
     description = models.TextField(null=True, blank=True, default=None)
-
-    hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE, related_name='policies', null=True, blank=True)
-    residence = models.ForeignKey(Residence, on_delete=models.CASCADE, related_name='policies', null=True, blank=True)
 
     is_valid = models.BooleanField(default=True)
     created_time = models.DateTimeField(auto_now_add=True)
     modified_time = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name_plural = "policies"
+        abstract = True
 
     def __str__(self):
         return self.title
+
+class ResidencePolicy(AbstractPolicy):
+    residence = models.ForeignKey(Residence, on_delete=models.CASCADE, related_name='policies', null=True, blank=True)
+
+    class Meta:
+        verbose_name_plural = "residence_policies"
+
+
+class HotelPolicy(AbstractPolicy):
+    hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE, related_name='policies', null=True, blank=True)
+
+    class Meta:
+        verbose_name_plural = "hotel_policies"
 
 
 # Rent_related models---------------------------------------------------------------------------------------------------

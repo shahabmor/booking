@@ -10,126 +10,118 @@ from .models import *
 # Location-related API ViewSets-----------------------------------------------------------------------------------------
 class CountryViewSet(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAdminUser]
 
     queryset = Country.objects.all()
     serializer_class = CountrySerializer
 
-    def get_permissions(self):
-        if self.action == 'list':
-            return [AllowAny()]
-        return [IsAdminUser()]
-
 
 class CityViewSet(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAdminUser]
 
     queryset = City.objects.all()
     serializer_class = CitySerializer
-
-    def get_permissions(self):
-        if self.action == 'list':
-            return [AllowAny()]
-        return [IsAdminUser()]
 
 
 # Residences API ViewSets-----------------------------------------------------------------------------------------------
 class UnitViewSet(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAdminUser]
 
     queryset = Unit.objects.all()
     serializer_class = UnitSerializer
 
-    def get_permissions(self):
-        if self.action == 'list':
-            return [AllowAny()]
-        return [IsAdminUser()]
-
 
 class HotelViewSet(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAdminUser]
 
     queryset = Hotel.objects.all()
     serializer_class = HotelSerializer
 
-    def get_permissions(self):
-        if self.action == 'list':
-            return [AllowAny()]
-        return [IsAdminUser()]
-
 
 class ResidenceViewSet(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAdminUser]
+
     queryset = Residence.objects.all()
     serializer_class = ResidenceSerializer
 
-    def get_permissions(self):
-        if self.action == 'list':
-            return [AllowAny()]
-        return [IsAdminUser()]
-
 
 # Image_related API ViewSets--------------------------------------------------------------------------------------------
-class ImageAlbumViewSet(viewsets.ModelViewSet):
+class ResidenceImageViewSet(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAdminUser]
 
-    queryset = ImageAlbum.objects.all()
-    serializer_class = ImageAlbumSerializer
-
-    def get_permissions(self):
-        if self.action == 'list':
-            return [AllowAny()]
-        return [IsAdminUser()]
+    queryset = ResidenceImage.objects.all()
+    serializer_class = ResidenceImageSerializer
 
 
-class ImageViewSet(viewsets.ModelViewSet):
+class HotelImageViewSet(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAdminUser]
 
-    queryset = Image.objects.all()
-    serializer_class = ImageSerializer
-
-    def get_permissions(self):
-        if self.action == 'list':
-            return [AllowAny()]
-        return [IsAdminUser()]
+    queryset = HotelImage.objects.all()
+    serializer_class = HotelImageSerializer
 
 
 # Facility API ViewSet--------------------------------------------------------------------------------------------------
-class FacilityViewSet(viewsets.ModelViewSet):
+class ResidenceFacilityViewSet(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAdminUser]
 
-    queryset = Facility.objects.all()
-    serializer_class = FacilitySerializer
+    queryset = ResidenceFacility.objects.all()
+    serializer_class = ResidenceFacilitySerializer
 
-    def get_permissions(self):
-        if self.action == 'list':
-            return [AllowAny()]
-        return [IsAdminUser()]
+
+class HotelFacilityViewSet(viewsets.ModelViewSet):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAdminUser]
+
+    queryset = HotelFacility.objects.all()
+    serializer_class = HotelFacilitySerializer
+
+class UnitFacilityViewSet(viewsets.ModelViewSet):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAdminUser]
+
+    queryset = UnitFacility.objects.all()
+    serializer_class = UnitFacilitySerializer
 
 
 # Policy API ViewSet----------------------------------------------------------------------------------------------------
-class PolicyViewSet(viewsets.ModelViewSet):
+class ResidencePolicyViewSet(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAdminUser]
 
-    queryset = Policy.objects.all()
-    serializer_class = PolicySerializer
-
-    def get_permissions(self):
-        if self.action == 'list':
-            return [AllowAny()]
-        return [IsAdminUser()]
+    queryset = ResidencePolicy.objects.all()
+    serializer_class = ResidencePolicySerializer
 
 
-# Price API ViewSet-----------------------------------------------------------------------------------------------------
-class PriceInfoViewSet(viewsets.ModelViewSet):
+class HotelPolicyViewSet(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAdminUser]
 
-    queryset = PriceInfo.objects.all()
-    serializer_class = PriceInfoSerializer
+    queryset = HotelPolicy.objects.all()
+    serializer_class = HotelPolicySerializer
 
-    def get_permissions(self):
-        if self.action == 'list':
-            return [AllowAny()]
-        return [IsAdminUser()]
+
+# Price-related API ViewSet-----------------------------------------------------------------------------------------------------
+class ResidencePriceInfoViewSet(viewsets.ModelViewSet):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAdminUser]
+
+    queryset = ResidencePriceInfo.objects.all()
+    serializer_class = ResidencePriceInfoSerializer
+
+
+class UnitPriceInfoViewSet(viewsets.ModelViewSet):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAdminUser]
+
+    queryset = UnitPriceInfo.objects.all()
+    serializer_class = UnitPriceInfoSerializer
 
 
 # Rent-related ViewSet--------------------------------------------------------------------------------------------------
