@@ -8,7 +8,8 @@ class RentResidenceSerializer(serializers.ModelSerializer):
     class Meta:
         model = RentResidence
         fields = ('id', 'date', 'residence', 'user')
-        extra_kwargs = {'residence': {'allow_null': True}}
+        extra_kwargs = {'residence': {'allow_null': True},
+                        }
 
     def create(self, validated_data):
         user = self.context['request'].user

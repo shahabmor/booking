@@ -48,6 +48,7 @@ INSTALLED_APPS = [
 
     'users.apps.UsersConfig',
     'residences.apps.ResidencesConfig',
+    'rent_residences.apps.RentResidencesConfig',
     'tickets.apps.TicketsConfig',
     'search.apps.SearchConfig',
 ]

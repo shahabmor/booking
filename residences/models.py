@@ -2,8 +2,6 @@ from django.db import models
 from django.conf import settings
 from django.utils import timezone
 
-now = timezone.localtime(timezone.now(), timezone.zoneinfo.ZoneInfo(key='Asia/Tehran'))
-
 
 # Location-related models-----------------------------------------------------------------------------------------------
 class Country(models.Model):
@@ -86,7 +84,7 @@ class Unit(models.Model):
 class AbstractPriceInfo(models.Model):
     currency = models.CharField(max_length=3, default='IRR')
     price = models.PositiveIntegerField(null=True, blank=True)
-    weekday = models.PositiveSmallIntegerField(default=now.weekday())
+    weekday = models.PositiveSmallIntegerField(default=timezone.now().weekday())
 
     is_valid = models.BooleanField(default=True)
     created_time = models.DateTimeField(auto_now_add=True)
@@ -130,11 +128,11 @@ class AbstractImage(models.Model):
 
 
 class ResidenceImage(AbstractImage):
-    residence = models.OneToOneField(Residence, on_delete=models.CASCADE, related_name='image_album',
+    residence = models.ForeignKey(Residence, on_delete=models.CASCADE, related_name='image_album',
                                      null=True, blank=True)
 
 class HotelImage(AbstractImage):
-    hotel = models.OneToOneField(Hotel, on_delete=models.CASCADE, related_name='image_album', null=True, blank=True)
+    hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE, related_name='image_album', null=True, blank=True)
 
 
 # Facility model--------------------------------------------------------------------------------------------------------
@@ -203,7 +201,7 @@ class HotelPolicy(AbstractPolicy):
 
 # Rent_related models---------------------------------------------------------------------------------------------------
 class RentResidence(models.Model):
-    date = models.DateField(blank=True, default=now.date())
+    date = models.DateField(default=timezone.now().date())
     residence = models.ForeignKey(Residence, blank=True, null=True, on_delete=models.CASCADE,
                                   related_name='rented_days')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.CASCADE,
@@ -221,7 +219,7 @@ class RentResidence(models.Model):
 
 
 class RentHotel(models.Model):
-    date = models.DateField(blank=True, default=now.date())
+    date = models.DateField(default=timezone.now().date())
     unit = models.ForeignKey(Unit, blank=True, null=True, on_delete=models.CASCADE, related_name='rented_days')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.CASCADE,
                              related_name='rent_hotel')
