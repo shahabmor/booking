@@ -2,6 +2,7 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
+
 from .serializers import *
 from residences.models import *
 
@@ -142,6 +143,20 @@ class ResidencesAPIView(GenericAPIView):
             serialized_data['capacity'] = residence.capacity
             serialized_data['price'] = residence.price_info.price
 
+            facilities = residence.facilities.all()
+            serialized_facilities = {}
+            for facility in facilities:
+                serialized_facilities[f"{facility.title}"] = facility.description
+
+            serialized_data['facilities'] = serialized_facilities
+
+            policies = residence.policies.all()
+            serialized_policies = {}
+            for policy in policies:
+                serialized_policies[f"{policy.title}"] = policy.description
+
+            serialized_data['policies'] = serialized_policies
+
             result[f'{residence.id}'] = serialized_data
 
         return Response(result)
@@ -191,9 +206,27 @@ class HotelsAPIView(GenericAPIView):
                     'bed': unit.bed,
                     'price': unit.price_info.price,
                 }
+
             serialized_data['units'] = serialized_units
+
+            facilities = hotel.facilities.all()
+            serialized_facilities = {}
+            for facility in facilities:
+                serialized_facilities[f"{facility.title}"] = facility.description
+            serialized_data['facilities'] = serialized_facilities
+
+            policies = hotel.policies.all()
+            serialized_policies = {}
+            for policy in policies:
+                serialized_policies[f"{policy.title}"] = policy.description
+            serialized_data['policies'] = serialized_policies
 
             result[f'{hotel.title}'] = serialized_data
 
         return Response(result)
+
+
+
+
+
 

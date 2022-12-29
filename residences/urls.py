@@ -21,8 +21,8 @@ router.register(r'policies/hotel', HotelPolicyViewSet, basename='policies/hotel'
 router.register(r'prices/residence', ResidencePriceInfoViewSet, basename='prices/residence')
 router.register(r'prices/unit', UnitPriceInfoViewSet, basename='prices/unit')
 
-router.register(r'rent/residence', RentResidenceViewSet, basename='rent/residence')
-router.register(r'rent/hotel', RentHotelViewSet, basename='rent/hotel')
+router.register(r'rent/residence', viewset=RentResidenceViewSet, basename='rent/residence')
+router.register(r'rent/hotel', viewset=RentHotelViewSet, basename='rent/hotel')
 
 
 urlpatterns = []

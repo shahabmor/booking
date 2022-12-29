@@ -1,7 +1,7 @@
-
-from rest_framework.permissions import IsAdminUser, AllowAny, IsAuthenticated
+from rest_framework.permissions import IsAdminUser
+from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from rest_framework import viewsets, mixins
+from rest_framework import viewsets
 from permission.permission import UserPermission
 from .serializers import *
 from .models import *
@@ -126,9 +126,7 @@ class UnitPriceInfoViewSet(viewsets.ModelViewSet):
 
 # Rent-related ViewSet--------------------------------------------------------------------------------------------------
 class RentResidenceViewSet(viewsets.ModelViewSet):
-
     authentication_classes = [JWTAuthentication]
-
     queryset = RentResidence.objects.all()
     serializer_class = RentResidenceSerializer
 
@@ -146,7 +144,3 @@ class RentHotelViewSet(viewsets.ModelViewSet):
         if self.action == 'list':
             return [IsAdminUser()]
         return [UserPermission()]
-
-
-
-

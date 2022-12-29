@@ -1,6 +1,6 @@
 from django.db import models
-from django.conf import settings
 from django.utils import timezone
+from django.conf import settings
 
 
 # Location-related models-----------------------------------------------------------------------------------------------
@@ -95,7 +95,7 @@ class AbstractPriceInfo(models.Model):
 
     def get_price(self):
         weekend_ratio = 1.2
-        weekend = [0, 1]
+        weekend = [0, 1,2,3,4,5,6]
         if self.weekday in weekend:
             self.price *= weekend_ratio
         return self.price
@@ -198,10 +198,9 @@ class HotelPolicy(AbstractPolicy):
     class Meta:
         verbose_name_plural = "hotel_policies"
 
-
 # Rent_related models---------------------------------------------------------------------------------------------------
 class RentResidence(models.Model):
-    date = models.DateField(default=timezone.now().date())
+    date = models.DateField(default=timezone.now().date(), )
     residence = models.ForeignKey(Residence, blank=True, null=True, on_delete=models.CASCADE,
                                   related_name='rented_days')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.CASCADE,
@@ -229,3 +228,5 @@ class RentHotel(models.Model):
 
     def __str__(self):
         return f'{self.unit}-{self.date}'
+
+

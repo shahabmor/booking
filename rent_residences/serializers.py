@@ -18,3 +18,5 @@ class ResidenceSerializer(serializers.ModelSerializer):
 # City Serializer-------------------------------------------------------------------------------------------------------
 class HotelsSerializer(serializers.ModelSerializer):
     hotel = serializers.CharField(max_length=50)
+
+

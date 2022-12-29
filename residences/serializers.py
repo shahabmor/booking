@@ -2,36 +2,6 @@ from rest_framework import serializers
 from residences.models import *
 
 
-# Rent-related serializer-----------------------------------------------------------------------------------------------
-class RentResidenceSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = RentResidence
-        fields = ('id', 'date', 'residence', 'user')
-        extra_kwargs = {'residence': {'allow_null': True},
-                        }
-
-    def create(self, validated_data):
-        user = self.context['request'].user
-        validated_data['user'] = user
-        return super(RentResidenceSerializer, self).create(validated_data)
-
-
-class RentHotelSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = RentHotel
-        fields = ('id', 'date', 'unit', 'user')
-        extra_kwargs = {
-            'unit': {'allow_null': True},
-        }
-
-    def create(self, validated_data):
-        user = self.context['request'].user
-        validated_data['user'] = user
-        return super(RentHotelSerializer, self).create(validated_data)
-
-
 # Facility serializer-------------------------------------------------------------------------------------------------
 class ResidenceFacilitySerializer(serializers.ModelSerializer):
     class Meta:
@@ -89,6 +59,9 @@ class ResidencePriceInfoSerializer(serializers.ModelSerializer):
             'residence': {'required': False, 'allow_null': True},
         }
 
+    # def validate_price(self, attr):
+    #     return attr*2
+
     def price_calculator(self, obj):
         pass
 
@@ -142,12 +115,11 @@ class ResidenceSerializer(serializers.ModelSerializer):
     facilities = ResidenceFacilitySerializer(many=True, read_only=True)
     policies = ResidencePolicySerializer(many=True, read_only=True)
     price_info = ResidencePriceInfoSerializer(many=False, read_only=True)
-    rented_days = RentResidenceSerializer(many=True, read_only=True)
 
     class Meta:
         model = Residence
         fields = ('id', 'title', 'description', 'capacity', 'bedroom', 'bed', 'city',
-                  'image_album', 'facilities', 'policies', 'price_info', 'rented_days')
+                  'image_album', 'facilities', 'policies', 'price_info')
         extra_kwargs = {'city': {'required': False, 'allow_null': True}}
 
 
@@ -181,4 +153,47 @@ class CountrySerializer(serializers.ModelSerializer):
     class Meta:
         model = Country
         fields = ('id', 'title', 'cities')
+
+    # @staticmethod
+    # def validate_title(attr):
+    #     return attr.capitalize()
+
+
+# Rent-related serializer-----------------------------------------------------------------------------------------------
+class RentResidenceSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = RentResidence
+        fields = ('id', 'date', 'residence', 'user')
+        extra_kwargs = {'residence': {'allow_null': True}}
+
+    def create(self, validated_data):
+        user = self.context['request'].user
+        validated_data['user'] = user
+        return super(RentResidenceSerializer, self).create(validated_data)
+
+    def validate_date(self, attr):
+        if attr < timezone.now().date():
+            raise ValueError('Selected date is in the past')
+        return attr
+
+
+class RentHotelSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = RentHotel
+        fields = ('id', 'date', 'unit', 'user')
+        extra_kwargs = {
+            'unit': {'allow_null': True},
+        }
+
+    def create(self, validated_data):
+        user = self.context['request'].user
+        validated_data['user'] = user
+        return super(RentHotelSerializer, self).create(validated_data)
+
+    def validate_date(self, attr):
+        if attr < timezone.now().date():
+            raise ValueError('Selected date is in the past')
+        return attr
 

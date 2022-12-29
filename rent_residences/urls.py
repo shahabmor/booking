@@ -1,3 +1,4 @@
+from rest_framework.routers import DefaultRouter
 from django.urls import path
 from .views import *
 
@@ -8,3 +9,5 @@ urlpatterns = [
     path('residence/', ResidencesAPIView.as_view()),
     path('hotel/', HotelsAPIView.as_view()),
 ]
+
+
