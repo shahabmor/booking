@@ -1,3 +1,4 @@
+from django.core.exceptions import ObjectDoesNotExist
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAdminUser, AllowAny, IsAuthenticated
@@ -44,34 +45,34 @@ class TerminalViewSet(viewsets.ModelViewSet):
 
 
 # Facility API ViewSet--------------------------------------------------------------------------------------------------
-class FacilityViewSet(viewsets.ModelViewSet):
+class AirPlaneTicketFacilityViewSet(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAdminUser]
 
-    queryset = Facility.objects.all()
-    serializer_class = FacilitySerializer
+    queryset = AirPlaneTicketFacility.objects.all()
+    serializer_class = AirPlaneTicketFacilitySerializer
 
 
 # Policy API ViewSet----------------------------------------------------------------------------------------------------
-class PolicyViewSet(viewsets.ModelViewSet):
+class AirPlaneTicketPolicyViewSet(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAdminUser]
 
-    queryset = Policy.objects.all()
-    serializer_class = PolicySerializer
+    queryset = AirPlaneTicketPolicy.objects.all()
+    serializer_class = AirPlaneTicketPolicySerializer
 
 
 # Price API ViewSet-----------------------------------------------------------------------------------------------------
-class PriceInfoViewSet(viewsets.ModelViewSet):
+class AirPlaneTicketPriceInfoViewSet(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAdminUser]
 
-    queryset = PriceInfo.objects.all()
-    serializer_class = PriceInfoSerializer
+    queryset = AirPlaneTicketPriceInfo.objects.all()
+    serializer_class = AirPlaneTicketPriceInfoSerializer
 
 
 # Buy-related API ViewSet------------------------------------------------------------------------------------------------
-class BuyAirPlaneTicketViewSet(viewsets.ModelViewSet):
+class BuyAirPlaneTicketViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
     authentication_classes = [JWTAuthentication]
 
     def get_queryset(self):
@@ -91,9 +92,16 @@ class BuyAirPlaneTicketViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         data = request.data
-        count = data['count']
-        ticket = AirplaneTicket.valid_tickets.get(id=data['ticket'])
-        user = request.user
+        try:
+            count = data['count']
+            try:
+                ticket = AirplaneTicket.valid_tickets.get(id=data['ticket'])
+            except ObjectDoesNotExist:
+                return Response(f'there is no flight with this id')
+            user = request.user
+
+        except KeyError:
+            return Response('ticket and count fields are required')
 
         if ticket.capacity >= int(count):
             buy_airplane_ticket = BuyAirPlaneTicket.objects.create(user=user, ticket=ticket, count=count)
@@ -105,20 +113,7 @@ class BuyAirPlaneTicketViewSet(viewsets.ModelViewSet):
             serializer = BuyAirPlaneTicketSerializer(buy_airplane_ticket)
             return Response(serializer.data)
 
-        raise ValueError(f'Only {ticket.capacity} tickets left!')
-
-    # def destroy(self, request, *args, **kwargs):
-    #
-    #     buy_airplane_ticket = self.get_object()
-    #     buy_airplane_ticket.delete()
-    #     return Response({'Ticket has been cancelled'})
-    # #     data = request.data
-    # #     count = data['count']
-    # #     ticket = AirplaneTicket.valid_tickets.get(id=data['ticket'])
-    # #     ticket.capacity += int(count)
-    # #     ticket.save()
-    # #
-    # #     return super().destroy()
+        return Response(f'Only {ticket.capacity} tickets left!')
 
 
 class SoldAirPlaneTicketViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):

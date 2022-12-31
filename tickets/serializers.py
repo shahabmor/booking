@@ -3,33 +3,30 @@ from tickets.models import *
 
 
 # Facility serializer---------------------------------------------------------------------------------------------------
-class FacilitySerializer(serializers.ModelSerializer):
+class AirPlaneTicketFacilitySerializer(serializers.ModelSerializer):
     class Meta:
-        model = Facility
-        fields = ('id', 'title', 'description', 'airplane_ticket',
-                  'is_valid', 'created_time', 'modified_time')
+        model = AirPlaneTicketFacility
+        fields = ('id', 'title', 'description', 'airplane_ticket')
         extra_kwargs = {
             'airplane_ticket': {'required': False, 'allow_null': True},
         }
 
 
 # Policy serializer-----------------------------------------------------------------------------------------------------
-class PolicySerializer(serializers.ModelSerializer):
+class AirPlaneTicketPolicySerializer(serializers.ModelSerializer):
     class Meta:
-        model = Policy
-        fields = ('id', 'title', 'description', 'airplane_ticket',
-                  'is_valid', 'created_time', 'modified_time')
+        model = AirPlaneTicketPolicy
+        fields = ('id', 'title', 'description', 'airplane_ticket')
         extra_kwargs = {
             'airplane_ticket': {'required': False, 'allow_null': True},
         }
 
 
 # Price_info serializer-------------------------------------------------------------------------------------------------
-class PriceInfoSerializer(serializers.ModelSerializer):
+class AirPlaneTicketPriceInfoSerializer(serializers.ModelSerializer):
     class Meta:
-        model = PriceInfo
-        fields = ('id', 'currency', 'price', 'airplane_ticket',
-                  'is_valid', 'created_time', 'modified_time')
+        model = AirPlaneTicketPriceInfo
+        fields = ('id', 'currency', 'price', 'airplane_ticket')
         extra_kwargs = {
             'airplane_ticket': {'required': False, 'allow_null': True},
         }
@@ -37,15 +34,14 @@ class PriceInfoSerializer(serializers.ModelSerializer):
 
 # Ticket serializer-----------------------------------------------------------------------------------------------------
 class AirplaneTicketSerializer(serializers.ModelSerializer):
-    facilities = FacilitySerializer(many=True, read_only=True)
-    policies = PolicySerializer(many=True, read_only=True)
-    price_info = PriceInfoSerializer(many=False, read_only=True)
+    facilities = AirPlaneTicketFacilitySerializer(many=True, read_only=True)
+    policies = AirPlaneTicketPolicySerializer(many=True, read_only=True)
+    price_info = AirPlaneTicketPriceInfoSerializer(many=False, read_only=True)
 
     class Meta:
         model = AirplaneTicket
         fields = ('id', 'company', 'description', 'origin', 'destination', 'time', 'duration',
-                  'airplane', 'flight_number', 'terminal', 'capacity', 'facilities', 'policies', 'price_info',
-                  'is_valid', 'created_time', 'modified_time')
+                  'airplane', 'flight_number', 'terminal', 'capacity', 'facilities', 'policies', 'price_info')
 
 
 # Terminal-related serializers------------------------------------------------------------------------------------------
@@ -55,8 +51,7 @@ class TerminalSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Terminal
-        fields = ('id', 'title', 'description', 'city', 'airplanetickets_departure', 'airplanetickets_arrival',
-                  'is_valid', 'created_time', 'modified_time')
+        fields = ('id', 'title', 'description', 'city', 'airplanetickets_departure', 'airplanetickets_arrival')
         extra_kwargs = {'city': {'required': False, 'allow_null': True}}
 
 
@@ -65,7 +60,7 @@ class CitySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = City
-        fields = ('id', 'title', 'country', 'terminals', 'is_valid', 'created_time', 'modified_time')
+        fields = ('id', 'title', 'country', 'terminals')
         extra_kwargs = {'country': {'required': False, 'allow_null': True}}
 
 
@@ -74,15 +69,15 @@ class CountrySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Country
-        fields = ('id', 'title', 'is_valid', 'cities', 'created_time', 'modified_time')
+        fields = ('id', 'title', 'cities')
 
 
 # Buy-related Serializers-----------------------------------------------------------------------------------------------
 class SeeAirplaneTicketSerializer(serializers.ModelSerializer):
 
-    facilities = FacilitySerializer(many=True, read_only=True)
-    policies = PolicySerializer(many=True, read_only=True)
-    price_info = PriceInfoSerializer(many=False, read_only=True)
+    facilities = AirPlaneTicketFacilitySerializer(many=True, read_only=True)
+    policies = AirPlaneTicketPolicySerializer(many=True, read_only=True)
+    price_info = AirPlaneTicketPriceInfoSerializer(many=False, read_only=True)
 
     class Meta:
         model = AirplaneTicket

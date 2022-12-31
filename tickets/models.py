@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from .managers import ValidTickets
+from residences.models import AbstractFacility, AbstractPolicy, AbstractPriceInfo
 
 from rest_framework import validators
 from django.utils import timezone
@@ -82,57 +83,20 @@ class AirplaneTicket(AbstractTicket):
 
 
 # Facility model--------------------------------------------------------------------------------------------------------
-class Facility(models.Model):
-    title = models.CharField(max_length=50)
-    description = models.TextField(null=True, blank=True, default=None)
-
+class AirPlaneTicketFacility(AbstractFacility):
     airplane_ticket = models.ForeignKey(AirplaneTicket, related_name='facilities', on_delete=models.CASCADE,
                                         null=True, blank=True)
 
-    is_valid = models.BooleanField(default=True)
-    created_time = models.DateTimeField(auto_now_add=True)
-    modified_time = models.DateTimeField(auto_now=True)
 
-    class Meta:
-        verbose_name_plural = "facilities"
-
-    def __str__(self):
-        return self.title
-#
-
-# Policy model--------------------------------------------------------------------------------------------------------
-class Policy(models.Model):
-    title = models.CharField(max_length=50)
-    description = models.TextField(null=True, blank=True, default=None)
-
+# Policy model----------------------------------------------------------------------------------------------------------
+class AirPlaneTicketPolicy(AbstractPolicy):
     airplane_ticket = models.ForeignKey(AirplaneTicket, related_name='policies', on_delete=models.CASCADE,
                                         null=True, blank=True)
 
-    is_valid = models.BooleanField(default=True)
-    created_time = models.DateTimeField(auto_now_add=True)
-    modified_time = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        verbose_name_plural = "policies"
-
-    def __str__(self):
-        return self.title
-
-
 # Price model-----------------------------------------------------------------------------------------------------------
-class PriceInfo(models.Model):
-    currency = models.CharField(max_length=3, default='IRR')
-    price = models.PositiveIntegerField(null=True, blank=True)
-
-    airplane_ticket = models.ForeignKey(AirplaneTicket, related_name='price_info', on_delete=models.CASCADE,
-                                        null=True, blank=True)
-
-    is_valid = models.BooleanField(default=True)
-    created_time = models.DateTimeField(auto_now_add=True)
-    modified_time = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return f'{self.price}_{self.currency}'
+class AirPlaneTicketPriceInfo(AbstractPriceInfo):
+    airplane_ticket = models.OneToOneField(AirplaneTicket, related_name='price_info', on_delete=models.CASCADE,
+                                            null=True, blank=True)
 
 
 # Buy-related models----------------------------------------------------------------------------------------------------
