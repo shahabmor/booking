@@ -137,11 +137,21 @@ class ResidencesAPIView(GenericAPIView):
             return Response('residence title could not be empty.')
 
         for residence in residences:
-            serialized_data = {}
-            serialized_data['title'] = residence.title
-            serialized_data['city'] = residence.city.title
-            serialized_data['capacity'] = residence.capacity
-            serialized_data['price'] = residence.price_info.price
+            try:
+                price = residence.price_info
+                amount = str(price.price)
+                currency = price.currency
+
+            except ObjectDoesNotExist:
+                amount = '--'
+                currency = '--'
+
+            serialized_data = {
+                'title': residence.title,
+                'city': residence.city.title,
+                'capacity': residence.capacity,
+                'price': amount + '-' + currency
+            }
 
             facilities = residence.facilities.all()
             serialized_facilities = {}
@@ -195,16 +205,23 @@ class HotelsAPIView(GenericAPIView):
             return Response('hotel title could not be empty.')
 
         for hotel in hotels:
-            serialized_data = {}
-            serialized_data['city'] = hotel.city.title
+            serialized_data = {'city': hotel.city.title}
 
             serialized_units = {}
             for unit in hotel.units.all():
+                try:
+                    price = unit.price_info
+                    amount = str(price.price)
+                    currency = price.currency
+
+                except ObjectDoesNotExist:
+                    amount = '--'
+                    currency = '--'
                 serialized_units[f"{unit.title}"] = {
                     'capacity': unit.capacity,
                     'bedroom': unit.bedroom,
                     'bed': unit.bed,
-                    'price': unit.price_info.price,
+                    'price': amount + '-' + currency,
                 }
 
             serialized_data['units'] = serialized_units
