@@ -172,7 +172,8 @@ class RentResidenceSerializer(serializers.ModelSerializer):
         validated_data['user'] = user
         return super(RentResidenceSerializer, self).create(validated_data)
 
-    def validate_date(self, attr):
+    @staticmethod
+    def validate_date(attr):
         if attr < timezone.now().date():
             raise ValueError('Selected date is in the past')
         return attr
@@ -192,7 +193,8 @@ class RentHotelSerializer(serializers.ModelSerializer):
         validated_data['user'] = user
         return super(RentHotelSerializer, self).create(validated_data)
 
-    def validate_date(self, attr):
+    @staticmethod
+    def validate_date(attr):
         if attr < timezone.now().date():
             raise ValueError('Selected date is in the past')
         return attr

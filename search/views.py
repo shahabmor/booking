@@ -159,7 +159,9 @@ class ResidenceSearchViewSet(GenericAPIView):
                 }
                 result[f'{residence.id}'] = info
 
-            return Response(result)
+            if result:
+                return Response(result)
+            return Response('There is no available residence with these credentials')
 
         except KeyError:
             return Response('city, dates and number of people fields are empty')
@@ -207,71 +209,62 @@ class HotelSearchViewSet(GenericAPIView):
             except MultiValueDictKeyError:
                 return Response('check_in and check_out fields are required')
 
-            print(date_check_result)
+            # hotel info serializer
+            hotel_result = {}
+            for unit in date_check_result:
+                hotel_result[f'{unit.hotel.title}'] = None
 
-            # hotel_result = {}
-            # for unit in date_check_result:
-            #     hotel_result[f'{unit.hotel.title}'] = units.filter(hotel__title=unit.hotel.title, i)
-            #
-            # for unit in date_check_result:
-            #     for hotel in hotel_result:
-            #         if unit.hotel.title == hotel:
-            #             unit_result = {'capacity': unit.capacity}
-            #             print(hotel_result[f'{unit.hotel.title}'])
-            #
-            # print(hotel_result)
-            #
-            # for hotel_id in hotel_result:
-            #     for unit in hotel_result[hotel_id]['units']:
-            #         print[hotel_result[hotel_id][unit]]
+            for hotel in hotel_result:
+                hotel_info = {}
+                units_info = {}
+                hotel_capacity = 0
+                for unit in date_check_result:
+                    if unit.hotel.title == hotel:
+                        try:
+                            price = unit.price_info
+                            amount = str(price.price)
+                            currency = price.currency
 
-            return Response('Done')
+                        except ObjectDoesNotExist:
+                            amount = '--'
+                            currency = '--'
 
+                        unit_info = {
+                            'id': unit.pk,
+                            'capacity': unit.capacity,
+                            'bedroom': unit.bedroom,
+                            'bed': unit.bed,
+                            'price_info': amount + "-" + currency,
+                        }
+                        units_info[f'room {unit.title}'] = unit_info
+                        hotel_capacity += unit.capacity
+
+                hotel_info['units'] = units_info
+                hotel_info['available_capacity'] = hotel_capacity
+                hotel_result[hotel] = hotel_info
 
             # capacity check
-            #
-            #
-            #
-            # try:
-            #     person = request.data['person']
-            #     available_units = []
-            #     for hotel in hotels:
-            #         for unit in hotel.units:
-            #             hotel_capacity =
-            #
-            #     if not tickets:
-            #         return Response(f'There is no airplane ticket with this credentials')
-            # except ValueError:
-            #     return Response(f'person field accept integer number')
-            # try:
-            #     person = request.data['person']
-            # except MultiValueDictKeyError:
-            #     person = 1
-            # finally:
-            #     residences = residences.filter(capacity__gte=person)
-            #     if not residences:
-            #         return Response(f'There is no residence with this credentials')
+            capacity_check_result = []
+            person = 1
+            try:
+                person = request.data['person']
+            except MultiValueDictKeyError:
+                pass
+            finally:
+                for hotel in hotel_result:
+                    if hotel_result[hotel]['available_capacity'] >= int(person):
+                        capacity_check_result.append(hotel)
 
+            # serializing the result data
+            result = {}
+            for hotel_title in capacity_check_result:
+                result[f'{hotel_title}'] = hotel_result[f'{hotel_title}']
 
-            #
-            # result = {}
-            # for residence in residences:
-            #     price = residence.price_info.price
-            #     currency = residence.price_info.currency
-            #
-            #     info = {
-            #         "title": residence.title,
-            #         "capacity": residence.capacity,
-            #         "bedroom": residence.bedroom,
-            #         "bed": residence.bed,
-            #         "city": residence.city.title,
-            #         "price": str(price) + "-" + currency,
-            #     }
-            #     result[f'{residence.id}'] = info
-            #
-            # return Response(result)
+            if result:
+                return Response(result)
+            return Response('There is no available hotel with these credentials')
 
-        except ValidationError:
+        except KeyError:
             return Response('city, dates and number of people fields are empty')
 
 
