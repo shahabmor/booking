@@ -81,10 +81,13 @@ class Unit(models.Model):
 
 
 # Price related model---------------------------------------------------------------------------------------------------
+
+class Currency(models.Model):
+    title = models.CharField(max_length=3, default='IRR')
+
 class AbstractPriceInfo(models.Model):
-    currency = models.CharField(max_length=3, default='IRR')
     price = models.PositiveIntegerField(null=True, blank=True)
-    weekday = models.PositiveSmallIntegerField(default=timezone.now().weekday())
+    currency = models.ForeignKey(Currency, related_name='%(class)ss', on_delete=models.CASCADE)
 
     is_valid = models.BooleanField(default=True)
     created_time = models.DateTimeField(auto_now_add=True)
@@ -93,15 +96,41 @@ class AbstractPriceInfo(models.Model):
     class Meta:
         abstract = True
 
-    def get_price(self):
-        weekend_ratio = 1.2
-        weekend = [0, 1,2,3,4,5,6]
-        if self.weekday in weekend:
-            self.price *= weekend_ratio
-        return self.price
+    def get_price(self, date=timezone.now(), weekend=(2, 3), weekend_ratio=1.2, holiday=(), holiday_ratio=1):
+        price = self.price
+
+        """
+        :param date:
+        :param weekend:
+        :param weekend_ratio:
+        :param holiday:
+        :param holiday_ratio:
+        :return:
+        """
+
+        weekday = date.weekday()
+        if weekday in weekend:
+            price *= weekend_ratio
+
+        if date in holiday:
+            price *= holiday_ratio
+
+        return round(price)
+        # try:
+        #     return round(price)
+        # except TypeError:
+        #     return self.price
 
     def __str__(self):
         return f'{self.price}_{self.currency}'
+
+#
+# class CurrencyExchangeRate(models.Model):
+#
+#     currency_from = models.CharField(max_length=3)
+#     currency_to = models.CharField(max_length=3)
+#
+#     rate = models.FloatField()
 
 
 class ResidencePriceInfo(AbstractPriceInfo):
@@ -129,7 +158,7 @@ class AbstractImage(models.Model):
 
 class ResidenceImage(AbstractImage):
     residence = models.ForeignKey(Residence, on_delete=models.CASCADE, related_name='image_album',
-                                     null=True, blank=True)
+                                  null=True, blank=True)
 
 class HotelImage(AbstractImage):
     hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE, related_name='image_album', null=True, blank=True)

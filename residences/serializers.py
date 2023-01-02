@@ -51,7 +51,15 @@ class HotelPolicySerializer(serializers.ModelSerializer):
 
 
 # Price-related serializers---------------------------------------------------------------------------------------------
+class CurrencySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Currency
+        fields = ['title']
+
+
 class ResidencePriceInfoSerializer(serializers.ModelSerializer):
+    # price = serializers.SerializerMethodField()
+
     class Meta:
         model = ResidencePriceInfo
         fields = ('id', 'currency', 'price', 'residence')
@@ -61,9 +69,8 @@ class ResidencePriceInfoSerializer(serializers.ModelSerializer):
 
     # def validate_price(self, attr):
     #     return attr*2
-
-    def price_calculator(self, obj):
-        pass
+    # def get_price(self, obj: ResidencePriceInfo):
+    #     return obj.get_price()
 
 
 class UnitPriceInfoSerializer(serializers.ModelSerializer):

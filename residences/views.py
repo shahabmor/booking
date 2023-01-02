@@ -107,7 +107,15 @@ class HotelPolicyViewSet(viewsets.ModelViewSet):
     serializer_class = HotelPolicySerializer
 
 
-# Price-related API ViewSet-----------------------------------------------------------------------------------------------------
+# Price-related API ViewSet---------------------------------------------------------------------------------------------
+class CurrencyViewSet(viewsets.ModelViewSet):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAdminUser]
+
+    queryset = Currency.objects.all()
+    serializer_class = CurrencySerializer
+
+
 class ResidencePriceInfoViewSet(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAdminUser]

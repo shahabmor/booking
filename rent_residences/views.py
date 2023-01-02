@@ -140,7 +140,8 @@ class ResidencesAPIView(GenericAPIView):
             try:
                 price = residence.price_info
                 amount = str(price.price)
-                currency = price.currency
+                currency = price.currency.title
+
 
             except ObjectDoesNotExist:
                 amount = '--'
@@ -212,7 +213,7 @@ class HotelsAPIView(GenericAPIView):
                 try:
                     price = unit.price_info
                     amount = str(price.price)
-                    currency = price.currency
+                    currency = price.currency.title
 
                 except ObjectDoesNotExist:
                     amount = '--'

@@ -59,7 +59,8 @@ class AbstractTicket(models.Model):
 
     duration = models.TimeField(null=True, blank=True)
 
-    origin = models.ForeignKey(Terminal, related_name='%(class)ss_departure', on_delete=models.CASCADE, null=True, blank=True)
+    origin = models.ForeignKey(Terminal, related_name='%(class)ss_departure', on_delete=models.CASCADE,
+                               null=True, blank=True)
     destination = models.ForeignKey(Terminal, related_name='%(class)ss_arrival', on_delete=models.CASCADE,
                                     null=True, blank=True)
 
@@ -96,7 +97,7 @@ class AirPlaneTicketPolicy(AbstractPolicy):
 # Price model-----------------------------------------------------------------------------------------------------------
 class AirPlaneTicketPriceInfo(AbstractPriceInfo):
     airplane_ticket = models.OneToOneField(AirplaneTicket, related_name='price_info', on_delete=models.CASCADE,
-                                            null=True, blank=True)
+                                           null=True, blank=True)
 
 
 # Buy-related models----------------------------------------------------------------------------------------------------

@@ -59,9 +59,9 @@ class AirPlaneTicketSearchViewSet(GenericAPIView):
             result = {}
             for ticket in tickets:
                 try:
-                    price = ticket.price_info.first()
+                    price = ticket.price_info
                     amount = str(price.price)
-                    currency = price.currency
+                    currency = price.currency.title
 
                 except ObjectDoesNotExist:
                     amount = '--'
@@ -142,12 +142,23 @@ class ResidenceSearchViewSet(GenericAPIView):
 
                 try:
                     price = residence.price_info
-                    amount = str(price.price)
-                    currency = price.currency
+                    currency = price.currency.title
+                    price_per_day = {}
+
+                    go_on = True
+                    date = check_in
+                    day_number = 1
+                    while go_on:
+                        amount = str(price.get_price(date=date))
+                        price_per_day[f'{date}'] = amount + '-' + currency
+
+                        date += timezone.timedelta(days=1)
+                        day_number += 1
+                        if date > check_out:
+                            go_on = False
 
                 except ObjectDoesNotExist:
-                    amount = '--'
-                    currency = '--'
+                    price_per_day = 'not defined'
 
                 info = {
                     "title": residence.title,
@@ -155,7 +166,7 @@ class ResidenceSearchViewSet(GenericAPIView):
                     "bedroom": residence.bedroom,
                     "bed": residence.bed,
                     "city": residence.city.title,
-                    "price": amount + "-" + currency,
+                    "price": price_per_day,
                 }
                 result[f'{residence.id}'] = info
 
@@ -222,19 +233,30 @@ class HotelSearchViewSet(GenericAPIView):
                     if unit.hotel.title == hotel:
                         try:
                             price = unit.price_info
-                            amount = str(price.price)
-                            currency = price.currency
+                            currency = price.currency.title
+                            price_per_day = {}
+
+                            go_on = True
+                            date = check_in
+                            day_number = 1
+                            while go_on:
+                                amount = str(price.get_price(date=date))
+                                price_per_day[f'{date}'] = amount + '-' + currency
+
+                                date += timezone.timedelta(days=1)
+                                day_number += 1
+                                if date > check_out:
+                                    go_on = False
 
                         except ObjectDoesNotExist:
-                            amount = '--'
-                            currency = '--'
+                            price_per_day = 'not defined'
 
                         unit_info = {
                             'id': unit.pk,
                             'capacity': unit.capacity,
                             'bedroom': unit.bedroom,
                             'bed': unit.bed,
-                            'price_info': amount + "-" + currency,
+                            'price_info': price_per_day,
                         }
                         units_info[f'room {unit.title}'] = unit_info
                         hotel_capacity += unit.capacity
