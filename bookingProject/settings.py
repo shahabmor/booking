@@ -51,6 +51,8 @@ INSTALLED_APPS = [
     'rent_residences.apps.RentResidencesConfig',
     'tickets.apps.TicketsConfig',
     'search.apps.SearchConfig',
+    'management.apps.ManagementConfig',
+    'currency_exchange.apps.CurrencyExchangeConfig',
 ]
 
 MIDDLEWARE = [

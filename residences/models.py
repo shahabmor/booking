@@ -124,14 +124,13 @@ class AbstractPriceInfo(models.Model):
     def __str__(self):
         return f'{self.price}_{self.currency}'
 
-#
-# class CurrencyExchangeRate(models.Model):
-#
-#     currency_from = models.CharField(max_length=3)
-#     currency_to = models.CharField(max_length=3)
-#
-#     rate = models.FloatField()
 
+class CurrencyExchangeRate(models.Model):
+
+    currency_from = models.ForeignKey(Currency, on_delete=models.CASCADE, related_name='currency_from')
+    currency_to = models.ForeignKey(Currency, on_delete=models.CASCADE, related_name='currency_to')
+
+    rate = models.FloatField()
 
 class ResidencePriceInfo(AbstractPriceInfo):
     residence = models.OneToOneField(Residence, on_delete=models.CASCADE, related_name='price_info',
@@ -229,7 +228,8 @@ class HotelPolicy(AbstractPolicy):
 
 # Rent_related models---------------------------------------------------------------------------------------------------
 class RentResidence(models.Model):
-    date = models.DateField(default=timezone.now().date(), )
+    date = models.DateField(blank=True, null=True)
+    # date = models.DateField(default=timezone.now().date())
     residence = models.ForeignKey(Residence, blank=True, null=True, on_delete=models.CASCADE,
                                   related_name='rented_days')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.CASCADE,
@@ -247,7 +247,8 @@ class RentResidence(models.Model):
 
 
 class RentHotel(models.Model):
-    date = models.DateField(default=timezone.now().date())
+    date = models.DateField(blank=True, null=True)
+    # date = models.DateField(default=timezone.now().date())
     unit = models.ForeignKey(Unit, blank=True, null=True, on_delete=models.CASCADE, related_name='rented_days')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.CASCADE,
                              related_name='rent_hotel')

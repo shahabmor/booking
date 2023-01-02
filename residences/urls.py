@@ -19,6 +19,7 @@ router.register(r'policies/residence', ResidencePolicyViewSet, basename='policie
 router.register(r'policies/hotel', HotelPolicyViewSet, basename='policies/hotel')
 
 router.register(r'prices/currency', CurrencyViewSet, basename='prices/currency')
+router.register(r'prices/currency_exchange_rate', CurrencyExchangeRateViewSet, basename='prices/currency_exchange_rate')
 router.register(r'prices/residence', ResidencePriceInfoViewSet, basename='prices/residence')
 router.register(r'prices/unit', UnitPriceInfoViewSet, basename='prices/unit')
 

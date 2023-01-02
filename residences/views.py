@@ -116,6 +116,13 @@ class CurrencyViewSet(viewsets.ModelViewSet):
     serializer_class = CurrencySerializer
 
 
+class CurrencyExchangeRateViewSet(viewsets.ModelViewSet):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAdminUser]
+
+    queryset = CurrencyExchangeRate.objects.all()
+    serializer_class = CurrencyExchangeRateSerializer
+
 class ResidencePriceInfoViewSet(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAdminUser]
