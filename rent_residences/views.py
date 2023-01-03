@@ -168,6 +168,17 @@ class ResidencesAPIView(GenericAPIView):
 
             serialized_data['policies'] = serialized_policies
 
+            comments = residence.comments.all()
+            serialized_comments = {}
+            for comment in comments:
+                if not comment.parent:
+                    serialized_comments[f"id:{comment.id}/ usr:{comment.user.username}"] = comment.comment_body
+                else:
+                    serialized_comments[f"id:{comment.id}/ usr:{comment.user.username} (reply-to:{comment.parent.id})"] \
+                        = comment.comment_body
+
+            serialized_data['comments'] = serialized_comments
+
             result[f'{residence.id}'] = serialized_data
 
         return Response(result)
@@ -238,6 +249,17 @@ class HotelsAPIView(GenericAPIView):
             for policy in policies:
                 serialized_policies[f"{policy.title}"] = policy.description
             serialized_data['policies'] = serialized_policies
+
+            comments = hotel.comments.all()
+            serialized_comments = {}
+            for comment in comments:
+                if not comment.parent:
+                    serialized_comments[f"id:{comment.id}/ usr:{comment.user.username}"] = comment.comment_body
+                else:
+                    serialized_comments[f"id:{comment.id}/ usr:{comment.user.username} (reply-to:{comment.parent.id})"] \
+                        = comment.comment_body
+
+            serialized_data['comments'] = serialized_comments
 
             result[f'{hotel.title}'] = serialized_data
 

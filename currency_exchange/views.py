@@ -1,7 +1,5 @@
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
-from django.db.utils import DataError
-from django.core.exceptions import ValidationError, ObjectDoesNotExist
 
 from residences.models import CurrencyExchangeRate, ResidencePriceInfo, UnitPriceInfo, Currency
 from tickets.models import AirPlaneTicketPriceInfo
@@ -18,7 +16,7 @@ class ExchangeAPIView(GenericAPIView):
         airplane_tickets_price = AirPlaneTicketPriceInfo.objects.all()
 
         try:
-            currency_to = request.data['currency_to'].upper()
+            currency_to = request.data['currency'].upper()
         except KeyError:
             return Response('currency_to field is required')
 

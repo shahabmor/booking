@@ -78,6 +78,18 @@ class AirPlaneTicketSearchViewSet(GenericAPIView):
                 }
                 result[f'{ticket.id}'] = info
 
+                comments = ticket.comments.all()
+                serialized_comments = {}
+                for comment in comments:
+                    if not comment.parent:
+                        serialized_comments[f"id:{comment.id}/ usr:{comment.user.username}"] = comment.comment_body
+                    else:
+                        serialized_comments[
+                            f"id:{comment.id}/ usr:{comment.user.username} (reply-to:{comment.parent.id})"] \
+                            = comment.comment_body
+
+                result['comments'] = serialized_comments
+
             return Response(result)
 
         except KeyError:
@@ -168,6 +180,19 @@ class ResidenceSearchViewSet(GenericAPIView):
                     "city": residence.city.title,
                     "price": price_per_day,
                 }
+
+                comments = residence.comments.all()
+                serialized_comments = {}
+                for comment in comments:
+                    if not comment.parent:
+                        serialized_comments[f"id:{comment.id}/ usr:{comment.user.username}"] = comment.comment_body
+                    else:
+                        serialized_comments[
+                            f"id:{comment.id}/ usr:{comment.user.username} (reply-to:{comment.parent.id})"] \
+                            = comment.comment_body
+
+                info['comments'] = serialized_comments
+
                 result[f'{residence.id}'] = info
 
             if result:
@@ -263,6 +288,21 @@ class HotelSearchViewSet(GenericAPIView):
 
                 hotel_info['units'] = units_info
                 hotel_info['available_capacity'] = hotel_capacity
+
+                # comment section
+                target_hotel = Hotel.objects.get(title=hotel)
+                comments = target_hotel.comments.all()
+                serialized_comments = {}
+                for comment in comments:
+                    if not comment.parent:
+                        serialized_comments[f"id:{comment.id}/ usr:{comment.user.username}"] = comment.comment_body
+                    else:
+                        serialized_comments[
+                            f"id:{comment.id}/ usr:{comment.user.username} (reply-to:{comment.parent.id})"] \
+                            = comment.comment_body
+
+                hotel_info['comments'] = serialized_comments
+
                 hotel_result[hotel] = hotel_info
 
             # capacity check

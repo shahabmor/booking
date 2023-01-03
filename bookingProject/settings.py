@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'search.apps.SearchConfig',
     'management.apps.ManagementConfig',
     'currency_exchange.apps.CurrencyExchangeConfig',
+    'comments.apps.CommentsConfig',
 ]
 
 MIDDLEWARE = [
