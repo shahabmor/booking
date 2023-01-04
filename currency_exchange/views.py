@@ -1,5 +1,6 @@
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
+from django.db.utils import DataError
 
 from residences.models import CurrencyExchangeRate, ResidencePriceInfo, UnitPriceInfo, Currency
 from tickets.models import AirPlaneTicketPriceInfo
@@ -26,7 +27,7 @@ class ExchangeAPIView(GenericAPIView):
                 valid_currency = True
 
         if not valid_currency:
-            return Response('currency in not valid')
+            return Response('currency is not valid')
 
         # residence price
         for residence_price in residences_price:

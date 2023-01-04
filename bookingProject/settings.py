@@ -94,7 +94,7 @@ WSGI_APPLICATION = 'bookingProject.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': '2',
+        'NAME': '4',
         'USER': 'root',
         'PASSWORD': 'hm(X*683(YovVXOF5%',
         'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
