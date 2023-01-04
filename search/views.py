@@ -90,6 +90,9 @@ class AirPlaneTicketSearchViewSet(GenericAPIView):
 
                 result['comments'] = serialized_comments
 
+                # rate section
+                result['rate'] = ticket.average_rating
+
             return Response(result)
 
         except KeyError:
@@ -192,6 +195,9 @@ class ResidenceSearchViewSet(GenericAPIView):
                             = comment.comment_body
 
                 info['comments'] = serialized_comments
+
+                # rate section
+                info['rate'] = residence.average_rating
 
                 result[f'{residence.id}'] = info
 
@@ -302,6 +308,9 @@ class HotelSearchViewSet(GenericAPIView):
                             = comment.comment_body
 
                 hotel_info['comments'] = serialized_comments
+
+                # rate section
+                hotel_info['rate'] = target_hotel.average_rating
 
                 hotel_result[hotel] = hotel_info
 

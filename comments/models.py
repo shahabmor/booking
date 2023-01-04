@@ -1,6 +1,8 @@
 from django.conf import settings
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
+from django.db.models import Avg
+
 from residences.models import Residence, Hotel
 from tickets.models import AirplaneTicket
 

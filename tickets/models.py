@@ -1,5 +1,7 @@
 from django.db import models
 from django.conf import settings
+from django.db.models import Avg
+
 from .managers import ValidTickets
 from residences.models import AbstractFacility, AbstractPolicy, AbstractPriceInfo
 
@@ -81,6 +83,11 @@ class AirplaneTicket(AbstractTicket):
     airplane = models.CharField(max_length=100, null=True, blank=True)
     flight_number = models.PositiveSmallIntegerField(null=True, blank=True)
     terminal = models.PositiveSmallIntegerField(null=True, blank=True)
+
+    @property
+    def average_rating(self):
+        rate = self.rates.all().aggregate(avg=Avg('rate'))
+        return rate.get('avg') or '-.-'
 
 
 # Facility model--------------------------------------------------------------------------------------------------------

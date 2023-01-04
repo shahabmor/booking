@@ -142,7 +142,6 @@ class ResidencesAPIView(GenericAPIView):
                 amount = str(price.price)
                 currency = price.currency.title
 
-
             except ObjectDoesNotExist:
                 amount = '--'
                 currency = '--'
@@ -168,6 +167,7 @@ class ResidencesAPIView(GenericAPIView):
 
             serialized_data['policies'] = serialized_policies
 
+            # comment section
             comments = residence.comments.all()
             serialized_comments = {}
             for comment in comments:
@@ -178,6 +178,9 @@ class ResidencesAPIView(GenericAPIView):
                         = comment.comment_body
 
             serialized_data['comments'] = serialized_comments
+
+            # rate section
+            serialized_data['rate'] = residence.average_rating
 
             result[f'{residence.id}'] = serialized_data
 
@@ -260,6 +263,9 @@ class HotelsAPIView(GenericAPIView):
                         = comment.comment_body
 
             serialized_data['comments'] = serialized_comments
+
+            # rate section
+            serialized_data['rate'] = hotel.average_rating
 
             result[f'{hotel.title}'] = serialized_data
 

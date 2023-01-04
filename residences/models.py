@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Avg
 from django.utils import timezone
 from django.conf import settings
 
@@ -56,10 +57,20 @@ class Residence(AbstractResidence):
     def __str__(self):
         return self.title
 
+    @property
+    def average_rating(self):
+        rate = self.rates.all().aggregate(avg=Avg('rate'))
+        return rate.get('avg') or '-.-'
+
 
 class Hotel(AbstractResidence):
     def __str__(self):
         return self.title
+
+    @property
+    def average_rating(self):
+        rate = self.rates.all().aggregate(avg=Avg('rate'))
+        return rate.get('avg') or '-.-'
 
 
 class Unit(models.Model):
