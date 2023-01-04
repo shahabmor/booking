@@ -54,12 +54,12 @@ class HotelPolicySerializer(serializers.ModelSerializer):
 class CurrencySerializer(serializers.ModelSerializer):
     class Meta:
         model = Currency
-        fields = ['title']
+        fields = ['id', 'title']
 
 class CurrencyExchangeRateSerializer(serializers.ModelSerializer):
     class Meta:
         model = CurrencyExchangeRate
-        fields = ['currency_from', 'currency_to', 'rate']
+        fields = ['id', 'currency_from', 'currency_to', 'rate']
 
 class ResidencePriceInfoSerializer(serializers.ModelSerializer):
     # price = serializers.SerializerMethodField()

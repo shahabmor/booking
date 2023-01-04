@@ -96,6 +96,14 @@ class Unit(models.Model):
 class Currency(models.Model):
     title = models.CharField(max_length=3, default='IRR')
 
+class CurrencyExchangeRate(models.Model):
+
+    currency_from = models.ForeignKey(Currency, on_delete=models.CASCADE, related_name='currency_from')
+    currency_to = models.ForeignKey(Currency, on_delete=models.CASCADE, related_name='currency_to')
+
+    rate = models.FloatField()
+
+
 class AbstractPriceInfo(models.Model):
     price = models.PositiveIntegerField(null=True, blank=True)
     currency = models.ForeignKey(Currency, related_name='%(class)ss', on_delete=models.CASCADE)
@@ -135,13 +143,6 @@ class AbstractPriceInfo(models.Model):
     def __str__(self):
         return f'{self.price}_{self.currency}'
 
-
-class CurrencyExchangeRate(models.Model):
-
-    currency_from = models.ForeignKey(Currency, on_delete=models.CASCADE, related_name='currency_from')
-    currency_to = models.ForeignKey(Currency, on_delete=models.CASCADE, related_name='currency_to')
-
-    rate = models.FloatField()
 
 class ResidencePriceInfo(AbstractPriceInfo):
     residence = models.OneToOneField(Residence, on_delete=models.CASCADE, related_name='price_info',

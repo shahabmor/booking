@@ -35,7 +35,7 @@ class ExchangeAPIView(GenericAPIView):
 
             for exchange_rate in currency_exchange_rates:
                 if exchange_rate.currency_from.title == currency_from and exchange_rate.currency_to.title == currency_to:
-                    residence_price.price = residence_price.price * exchange_rate.rate
+                    residence_price.price = int(residence_price.price * exchange_rate.rate)
                     residence_price.currency = exchange_rate.currency_to
                     residence_price.save()
 
