@@ -313,7 +313,6 @@ class HotelSearchViewSet(GenericAPIView):
                 hotel_info['rate'] = target_hotel.average_rating
 
                 hotel_result[hotel] = hotel_info
-
             # capacity check
             capacity_check_result = []
             person = 1

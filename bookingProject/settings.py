@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django_restful_admin',
     'rest_framework_simplejwt',
     'django_filters',
+    'django_extensions',
 
     'users.apps.UsersConfig',
     'residences.apps.ResidencesConfig',
@@ -186,4 +187,11 @@ SIMPLE_JWT = {
 
 }
 
+
+# Graph
+GRAPH_MODELS = {
+    'all_applications': True,
+    'group_models': True,
+    'app_labels': ["residences", "tickets", "comments", "currency_exchange"],
+}
 
