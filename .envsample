@@ -2,3 +2,9 @@ SECRET_KEY = secret_key
 DEBUG = debug
 
 ALLOWED_HOSTS = []
+
+# Database
+PASSWORD = ------
+NAME = -----
+USER = -----
+HOST = -----
